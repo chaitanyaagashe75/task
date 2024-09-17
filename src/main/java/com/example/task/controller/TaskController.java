@@ -42,17 +42,34 @@ public class TaskController {
 //    }
 
     @PutMapping
-    public ApiResponse<Task> update (@RequestBody TaskDto taskDto) {
-        return ApiResponse.<Task>builder().statusCode(200).message("Success").data(taskService.update(taskDto)).error(null).build();
+    public ApiResponse update (@RequestBody TaskDto taskDto) {
+        Task task = taskService.update(taskDto);
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setStatusCode(200);
+        apiResponse.setError(null);
+        apiResponse.setMessage("Success");
+        apiResponse.setData(task);
+        return apiResponse;
+//        return ApiResponse.<Task>builder().statusCode(200).message("Success").data(taskService.update(taskDto)).error(null).build();
     }
 
     @GetMapping("/{id}")
-    public Task get(@PathVariable String id){
-        return taskService.get(id);
+    public ApiResponse get(@PathVariable String id){
+        /*Task task =  taskService.get(id);
+        ApiResponse apiResponse =new ApiResponse();
+        apiResponse.setStatusCode(200);
+        apiResponse.setError(null);
+        apiResponse.setMessage("Success");
+        apiResponse.setData(task);
+        return apiResponse;*/
+
+        return ApiResponse.<Task>builder().statusCode(200).message("Success").data(taskService.get(id)).error(null).build();
+
     }
 
     @DeleteMapping("/{id}")
-    public Task delete(@PathVariable String id) {
-        return taskService.delete(id);
+    public ApiResponse delete(@PathVariable String id)  {
+        return ApiResponse.<Task>builder().statusCode(200).message("Task deleted successfully").error(null).build();
     }
+
 }

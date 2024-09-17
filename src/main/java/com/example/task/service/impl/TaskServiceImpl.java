@@ -6,11 +6,9 @@ import com.example.task.enums.TaskStatus;
 import com.example.task.exception.TaskException;
 import com.example.task.repository.TaskRepository;
 import com.example.task.service.TaskService;
-import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -45,6 +43,8 @@ public class TaskServiceImpl implements TaskService {
             }
             if(taskDto.getStatus().equalsIgnoreCase(TaskStatus.COMPLETED.toString())) {
                 task.setStatus(TaskStatus.COMPLETED.toString());
+            }else if(taskDto.getStatus().equalsIgnoreCase(TaskStatus.PENDING.toString())){
+                task.setStatus(TaskStatus.PENDING.toString());
             }
             return taskRepository.save(task);
         } else {
@@ -63,7 +63,14 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task delete(String id) {
-        return null;
+    public void delete(String id) {
+        Optional<Task> OptTask = taskRepository.findById(id);
+        if (OptTask.isPresent()) {
+            taskRepository.deleteById(id);
+        } else {
+            throw new TaskException(400, "Task not found for id: " + id);
+        }
     }
+
 }
+
